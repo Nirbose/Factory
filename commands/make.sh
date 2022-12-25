@@ -1,5 +1,3 @@
-#!/bin/sh
-
 YELLOW="\e[33m"
 RED_BOLD="\e[1;31m"
 BG_RED="\e[48;5;1m"

@@ -1,5 +1,3 @@
-#!/bin/sh
-
 SUCCESS="\e[1;32m"
 ERROR="\e[1;31m"
 BG_SUCCESS="\e[48;5;2m"
