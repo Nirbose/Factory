@@ -28,7 +28,7 @@ if [ "$#" -eq 0 ]; then
 fi
 
 if [ $(echo $1 | cut -d ":" -f 2) = $(echo $1 | cut -d ":" -f 1) ]; then
-    sh ./$(dirname $0)/commands/$(echo $1 | cut -d ":" -f 1)
+    sh ./$(dirname $0)/commands/$(echo $1 | cut -d ":" -f 1).sh
 else
-    sh ./$(dirname $0)/commands/$(echo $1 | cut -d ":" -f 1) $(echo $1 | tr ":" "\n" | sed '1d') $2
+    sh ./$(dirname $0)/commands/$(echo $1 | cut -d ":" -f 1).sh $(echo $1 | tr ":" "\n" | sed '1d') $2
 fi
