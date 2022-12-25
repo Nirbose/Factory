@@ -3,32 +3,30 @@
 YELLOW="\e[33m"
 ENDCOLOR="\e[0m"
 
-if [ "$#" -eq 0 ]; then
-    echo "
- ______               _
-|  ____|             | |
-| |__     __ _   ___ | |_   ___   _ __  _   _
-|  __|   / _\` | / __|| __| / _ \ | '__|| | | |
-| |     | (_| || (__ | |_ | (_) || |   | |_| |
-|_|      \__,_| \___| \__| \___/ |_|    \__, |
-                                         __/ |
-                                        |___/    
-"
+if [ "$#" -eq 0 ] || [ "$1" = "help" ]; then
+    echo "\e[38;5;125m
+   ___               _
+  / __\  __ _   ___ | |_   ___   _ __  _   _
+ / _\   / _\` | / __|| __| / _ \ | '__|| | | |
+/ /    | (_| || (__ | |_ | (_) || |   | |_| |
+\/      \__,_| \___| \__| \___/ |_|    \__, |
+                                       |___/
+${ENDCOLOR}"
     if [ "$(ls $(dirname $0)/commands | wc -l)" -eq 0 ]; then
         echo "Un peux vide par ici..."
         exit 0
     fi
-    echo "${YELLOW}Usage :${ENDCOLOR}\n  ./$(basename $0) [options] [arguments]\n"
+    echo "${YELLOW}Usage :${ENDCOLOR}\n  $(basename $0) [options] [arguments]\n"
     echo "${YELLOW}Options :${ENDCOLOR}"
     for file in $(dirname $0)/commands/*; do
-        echo "  - $(basename $file)"
+        echo "  - $(basename $file | cut -d '.' -f 1)"
     done
     echo ""
     exit 0
 fi
 
 if [ $(echo $1 | cut -d ":" -f 2) = $(echo $1 | cut -d ":" -f 1) ]; then
-    sh ./$(dirname $0)/commands/$(echo $1 | cut -d ":" -f 1).sh
+    sh $(dirname $0)/commands/$(echo $1 | cut -d ":" -f 1).sh
 else
-    sh ./$(dirname $0)/commands/$(echo $1 | cut -d ":" -f 1).sh $(echo $1 | tr ":" "\n" | sed '1d') $2
+    sh $(dirname $0)/commands/$(echo $1 | cut -d ":" -f 1).sh $(echo $1 | tr ":" "\n" | sed '1d') $2
 fi
