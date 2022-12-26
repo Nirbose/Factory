@@ -1,27 +1,34 @@
+B_YELLOW="\e[1;33m"
 BG_SUCCESS="\e[48;5;2m"
 BG_ERROR="\e[48;5;1m"
 ENDCOLOR="\e[0m"
 
 if [ $1 = "check" ]; then
+    echo "Norminette :"
     HAS_ERROR=$(norminette | grep "Error" -c)
-    if [ HAS_ERROR = 0 ]; then
+    if [ $HAS_ERROR = 0 ]; then
         echo "${BG_SUCCESS} Ok ${ENDCOLOR} The clean code"
     else
-        echo "${BG_ERROR} Fail ${ENDCOLOR}"
-        echo "There are $(norminette | grep "Error!" | wc -l) files that are not in the standard"
-        echo "As well as $(norminette | grep "Error:" | wc -l) standard errors"
-        echo "\nUse nono:clean for clean code"
+        echo "${BG_ERROR} Fail ${ENDCOLOR} ${B_YELLOW}$(norminette | grep "Error:" | wc -l)${ENDCOLOR} errors in ${B_YELLOW}$(norminette | grep "Error!" | wc -l)${ENDCOLOR} files"
     fi
-fi
-
-if [ $1 = "clean" ]; then
-    FILE=""
-    for line in $(norminette); do
-        if [ $(echo $line | grep -e "\.[ch]:" -c) = 1 ]; then
-            FILE=$(echo $line | cut -d ":" -f 1)
+    if [ -f "Makefile" ]; then
+        echo "\nMakefile :"
+        make -s
+        HAS_ERROR=$(make | grep "make:" -c)
+        if ! [ $HAS_ERROR = 0 ]; then
+            echo "${BG_SUCCESS} Ok ${ENDCOLOR} Good Makefile"
+        else
+            echo "${BG_ERROR} Fail ${ENDCOLOR} Makefile relink"
         fi
-        if [ $(echo $line | grep "INVALID_HEADER" -c) = 1 ] && ! [ $FILE = "" ]; then
-            $(echo ":Stdheader\n:wq" | vi "$FILE")
+        make fclean -s
+    fi
+    if [ -d "tests" ]; then
+        echo "\nTests :"
+        HAS_ERROR=$(sh $(dirname $0)/test.sh | grep "Error" -c)
+        if [ $HAS_ERROR = 0 ]; then
+            echo "${BG_SUCCESS} Ok ${ENDCOLOR} All tests is good"
+        else
+            echo "${BG_ERROR} Fail ${ENDCOLOR}"
         fi
-    done
+    fi
 fi
