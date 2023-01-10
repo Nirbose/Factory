@@ -3,6 +3,12 @@ BG_SUCCESS="\e[48;5;2m"
 BG_ERROR="\e[48;5;1m"
 ENDCOLOR="\e[0m"
 
+if [ $# = 0 ]; then
+    echo "${BG_RED} ERROR ${ENDCOLOR} There are missing arguments to \"nono\".\n"
+    echo "  ├ nono:check\n"
+	exit 0
+fi
+
 if [ $1 = "check" ]; then
     echo "Norminette :"
     HAS_ERROR=$(norminette | grep "Error" -c)
